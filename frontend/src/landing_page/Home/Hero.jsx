@@ -1,7 +1,6 @@
-import style from "./Hero.module.css";
 export default function Hero() {
   return (
-    <div className="container p-5 mb-5">
+    <div className="container p-5 mt-5">
       <div className="row text-center">
         <img
           src="media/images/homeHero.png"
@@ -13,7 +12,12 @@ export default function Hero() {
           Online platform to invest in stocks, derivative, mutual funds, and
           more
         </p>
-        <button className={style.signUpBtn}>Signup now</button>
+        <button
+          className="p-2 btn btn-primary fs-5 mb-5"
+          style={{ width: "16%", margin: "0 auto" }}
+        >
+          Sign up now
+        </button>
       </div>
     </div>
   );
