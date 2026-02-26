@@ -8,7 +8,7 @@ export default function LeftSection({
   appStore,
 }) {
   return (
-    <div className="container border-top p-5">
+    <div className="container p-5">
       <div className="row">
         <div className="col-5 p-5">
           <img src={imageUrl} alt="product-kite" />
