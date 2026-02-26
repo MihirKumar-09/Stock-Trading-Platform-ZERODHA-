@@ -15,7 +15,12 @@ export default function Products() {
         googlePlay=" "
         appStore=""
       />
-      <RightSection />
+      <RightSection
+        imageUrl="media/images/console.png"
+        productName="Console"
+        productDescription="The central dashboard for your Zerodha account. Gain insights into your trades and investments with in-depth reports and visualisations."
+        learnMore="Learn more"
+      />
       <LeftSection
         imageUrl="media/images/coin.png"
         productName="Coin"
@@ -24,7 +29,12 @@ export default function Products() {
         googlePlay=" "
         appStore=""
       />
-      <RightSection />
+      <RightSection
+        imageUrl="media\images\kiteconnect.png"
+        productName="Console"
+        productDescription="The central dashboard for your Zerodha account. Gain insights into your trades and investments with in-depth reports and visualisations."
+        learnMore="Kite Connect"
+      />
       <LeftSection
         imageUrl="media/images/varsity.png"
         productName="Varsity mobile"

@@ -1,7 +1,7 @@
 export default function Hero() {
   return (
-    <div className="container p-5 mt-3 mb-5">
-      <div className="row text-center">
+    <div className="container p-5 mt-3 mb-5 border-bottom">
+      <div className="row text-center mb-5">
         <h4 className="mt-5 fs-2 mb-3" style={{ color: "#434343" }}>
           Zerodha Products
         </h4>
