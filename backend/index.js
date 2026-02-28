@@ -1,6 +1,21 @@
-const express = require("express");
+require("dotenv").config();
+import express from "express";
+import { connect } from "mongoose";
+
+const PORT = process.env.PORT || 3002;
 const app = express();
 
-app.listen(3002, () => {
-  console.log("Server is running on PORT", 3003);
-});
+async function startServer() {
+  try {
+    await connect(process.env.MONGODB_URL);
+    console.log("MongoDB connected");
+
+    app.listen(PORT, () => {
+      console.log("Server running on port", PORT);
+    });
+  } catch (err) {
+    console.error("DB connection failed ❌", err);
+  }
+}
+
+startServer();
