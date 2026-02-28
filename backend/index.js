@@ -14,7 +14,7 @@ async function startServer() {
       console.log("Server running on port", PORT);
     });
   } catch (err) {
-    console.error("DB connection failed ❌", err);
+    console.error("DB connection failed", err);
   }
 }
 
