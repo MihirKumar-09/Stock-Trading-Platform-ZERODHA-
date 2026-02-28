@@ -1,13 +1,13 @@
 require("dotenv").config();
-import express from "express";
-import { connect } from "mongoose";
+const express = require("express");
+const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3002;
 const app = express();
 
 async function startServer() {
   try {
-    await connect(process.env.MONGODB_URL);
+    await mongoose.connect(process.env.MONGODB_URL);
     console.log("MongoDB connected");
 
     app.listen(PORT, () => {
