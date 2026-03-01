@@ -2,11 +2,24 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
 
 const PORT = 3002;
 const uri = process.env.MONGODB_URI;
+
+app.use(bodyParser.json());
+app.use(cors());
+
+//!=======IMPORT ALL ROUTES=========
+import HoldingRoute from "./routes/holdingRoute.js";
+import PositionRoute from "./routes/positionRoute.js";
+
+//!===========REGISTER WITH SERVER=========
+app.use("/holdings", HoldingRoute);
+app.use("/position", PositionRoute);
 
 //!============START SERVER & CALL THE FUNCTION===========
 app.listen(PORT, () => {
