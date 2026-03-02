@@ -16,10 +16,12 @@ app.use(cors());
 //!=======IMPORT ALL ROUTES=========
 import HoldingRoute from "./routes/holdingRoute.js";
 import PositionRoute from "./routes/positionRoute.js";
+import OrderRoute from "./routes/orderRoute.js";
 
 //!===========REGISTER WITH SERVER=========
 app.use("/holdings", HoldingRoute);
 app.use("/position", PositionRoute);
+app.use("/order", OrderRoute);
 
 //!============START SERVER & CALL THE FUNCTION===========
 app.listen(PORT, () => {

@@ -1,29 +1,44 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-
-import axios from "axios";
 
 import GeneralContext from "./GeneralContext";
 
 import "./BuyActionWindow.css";
 
 const BuyActionWindow = ({ uid }) => {
-  const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(0.0);
+  const generalContext = useContext(GeneralContext);
+  const [stockQuantity, setStockQuantity] = useState(1); //For stock quantity
+  const [stockPrice, setStockPrice] = useState(0.0); // For stock price;
 
-  const handleBuyClick = () => {
-    axios.post("http://localhost:3002/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "BUY",
-    });
+  const handleBuyClick = async () => {
+    try {
+      const res = await fetch("http://localhost:3002/order/newOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: uid,
+          qty: Number(stockQuantity),
+          price: Number(stockPrice),
+          mode: "BUY",
+        }),
+      });
 
-    GeneralContext.closeBuyWindow();
+      if (!res.ok) {
+        throw new Error("Server Error");
+      }
+
+      const data = await res.json();
+      console.log(data);
+      generalContext.closeBuyWindow(); // After buy close the window;
+    } catch (err) {
+      console.log("Failed to create new order", err);
+    }
   };
 
   const handleCancelClick = () => {
-    GeneralContext.closeBuyWindow();
+    generalContext.closeBuyWindow(); //Close the window if user click the cancel button;
   };
 
   return (

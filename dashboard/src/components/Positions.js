@@ -1,8 +1,23 @@
-import React from "react";
+import { useState, useEffect } from "react";
 
-import { positions } from "../data/data";
+// import { positions } from "../data/data";
 
 const Positions = () => {
+  const [positions, setAllPositions] = useState([]);
+
+  useEffect(() => {
+    const fetchPosition = async () => {
+      try {
+        const res = await fetch("http://localhost:3002/position/allPosition");
+        const data = await res.json();
+        console.log(data);
+        setAllPositions(data.allPosition);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPosition();
+  }, []);
   return (
     <>
       <h3 className="title">Positions ({positions.length})</h3>
