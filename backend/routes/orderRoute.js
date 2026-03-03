@@ -1,5 +1,6 @@
 import express from "express";
 import Order from "../models/OrderModel.js";
+import Holdings from "../models/HoldingsModel.js";
 const router = express.Router();
 
 //!=========GET -> ALL ORDERS==========
@@ -32,6 +33,46 @@ router.post("/newOrder", async (req, res) => {
     await newOrder.save();
 
     // Update Holdings;
+    const existingHolding = await Holdings.findOne({ name });
+
+    if (mode === "BUY") {
+      if (existingHolding) {
+        const totalQty = existingHolding.qty + qty;
+
+        const totalCost =
+          existingHolding.qty * existingHolding.avg + qty * price;
+
+        existingHolding.qty = totalQty;
+        existingHolding.avg = totalCost / totalQty;
+
+        await existingHolding.save();
+      } else {
+        await Holdings.create({
+          name,
+          qty,
+          avg: price,
+          price,
+        });
+      }
+    }
+
+    if (mode === "SELL") {
+      if (!existingHolding) {
+        return res.status(400).json({ message: "No holdings found to sell" });
+      }
+
+      if (existingHolding.qty < qty) {
+        return res.status(400).json({ message: "Not enough quantity to sell" });
+      }
+
+      existingHolding.qty -= qty;
+
+      if (existingHolding.qty === 0) {
+        await Holdings.deleteOne({ name });
+      } else {
+        await existingHolding.save();
+      }
+    }
 
     return res.status(202).json({ message: "New order create ✅", newOrder });
   } catch (err) {

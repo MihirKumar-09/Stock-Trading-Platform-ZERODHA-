@@ -5,8 +5,6 @@ const HoldingsSchema = new mongoose.Schema({
   qty: Number,
   avg: Number,
   price: Number,
-  net: String,
-  day: String,
 });
 
 const Holdings = mongoose.model("Holdings", HoldingsSchema);
