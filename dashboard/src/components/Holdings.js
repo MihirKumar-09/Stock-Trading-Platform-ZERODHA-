@@ -5,17 +5,17 @@ import { VerticalGraph } from "./VerticalGraph";
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
 
+  const fetchHoldingsData = async () => {
+    try {
+      const res = await fetch("http://localhost:3002/holdings/allHoldings");
+      const data = await res.json();
+      setAllHoldings(data.allHoldings);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchHoldingsData = async () => {
-      try {
-        const res = await fetch("http://localhost:3002/holdings/allHoldings");
-        const data = await res.json();
-        console.log(data);
-        setAllHoldings(data.allHoldings);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchHoldingsData();
   }, []);
 
@@ -67,9 +67,19 @@ const Holdings = () => {
 
           {allHoldings.map((stock, index) => {
             const curValue = stock.price * stock.qty;
-            const isProfit = curValue - stock.avg * stock.qty >= 0.0;
-            const profClass = isProfit ? "profit" : "loss";
-            const dayClass = stock.isLoss ? "loss" : "profit";
+
+            const investment = stock.avg * stock.qty;
+
+            const pnl = curValue - investment;
+
+            const netPercent =
+              stock.avg !== 0
+                ? ((stock.price - stock.avg) / stock.avg) * 100
+                : 0;
+
+            const profClass = pnl >= 0 ? "profit" : "loss";
+            const dayPercent = 0;
+            const dayClass = dayPercent >= 0 ? "profit" : "loss";
 
             return (
               <tr key={index}>
@@ -78,11 +88,9 @@ const Holdings = () => {
                 <td>{stock.avg.toFixed(2)}</td>
                 <td>{stock.price.toFixed(2)}</td>
                 <td>{curValue.toFixed(2)}</td>
-                <td className={profClass}>
-                  {(curValue - stock.avg * stock.qty).toFixed(2)}
-                </td>
-                <td className={profClass}>{stock.net}</td>
-                <td className={dayClass}>{stock.day}</td>
+                <td className={profClass}>{pnl.toFixed(2)}</td>
+                <td className={profClass}>{netPercent.toFixed(2)}%</td>
+                <td className={dayClass}>{dayPercent.toFixed(2)}%</td>
               </tr>
             );
           })}

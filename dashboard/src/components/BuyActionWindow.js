@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import GeneralContext from "./GeneralContext";
 
@@ -9,6 +10,7 @@ const BuyActionWindow = ({ uid }) => {
   const generalContext = useContext(GeneralContext);
   const [stockQuantity, setStockQuantity] = useState(1); //For stock quantity
   const [stockPrice, setStockPrice] = useState(0.0); // For stock price;
+  const navigate = useNavigate();
 
   const handleBuyClick = async () => {
     try {
@@ -32,6 +34,7 @@ const BuyActionWindow = ({ uid }) => {
       const data = await res.json();
       console.log(data);
       generalContext.closeBuyWindow(); // After buy close the window;
+      navigate("/holdings");
     } catch (err) {
       console.log("Failed to create new order", err);
     }
