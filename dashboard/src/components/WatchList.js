@@ -1,6 +1,4 @@
-import React, { useState, useContext } from "react";
-
-import axios from "axios";
+import { useState, useContext, useEffect } from "react";
 
 import GeneralContext from "./GeneralContext";
 
@@ -13,12 +11,28 @@ import {
   MoreHoriz,
 } from "@mui/icons-material";
 
-import { watchlist } from "../data/data";
 import { DoughnutChart } from "./DoughnoutChart";
 
-const labels = watchlist.map((subArray) => subArray["name"]);
-
 const WatchList = () => {
+  const [watchlist, setWatchlist] = useState([]);
+
+  const labels = watchlist.map((subArray) => subArray["name"]);
+
+  useEffect(() => {
+    const fetchWatchListData = async () => {
+      try {
+        const res = await fetch("http://localhost:3002/watchList/allWatchList");
+        if (!res.ok) {
+          throw new Error("Internal Server Error");
+        }
+        const data = await res.json();
+        setWatchlist(data.allWatchLists);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchWatchListData();
+  }, []);
   const data = {
     labels,
     datasets: [
@@ -115,13 +129,13 @@ const WatchListItem = ({ stock }) => {
       <div className="item">
         <p className={stock.isDown ? "down" : "up"}>{stock.name}</p>
         <div className="itemInfo">
-          <span className="percent">{stock.percent}</span>
+          <span className="percent">{stock.percent.toFixed(2)}%</span>
           {stock.isDown ? (
             <KeyboardArrowDown className="down" />
           ) : (
-            <KeyboardArrowUp className="down" />
+            <KeyboardArrowUp className="up" />
           )}
-          <span className="price">{stock.price}</span>
+          <span className="price">{stock.price.toFixed(2)}</span>
         </div>
       </div>
       {showWatchlistActions && <WatchListActions uid={stock.name} />}
