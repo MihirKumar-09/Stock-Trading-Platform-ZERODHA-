@@ -1,21 +1,23 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 import GeneralContext from "./GeneralContext";
 
-import "./BuyActionWindow.css";
+// import "./SellActionWindow.css";
 
-const BuyActionWindow = ({ uid }) => {
+const SellActionWindow = ({ uid }) => {
   const generalContext = useContext(GeneralContext);
-  const [stockQuantity, setStockQuantity] = useState(1); //For stock quantity
-  const [stockPrice, setStockPrice] = useState(0.0); // For stock price;
+
+  const [stockQuantity, setStockQuantity] = useState(1);
+  const [stockPrice, setStockPrice] = useState(0.0);
+
   const navigate = useNavigate();
 
-  const handleBuyClick = async () => {
+  const handleSellClick = async () => {
     try {
-      const res = await fetch("http://localhost:3002/order/newOrder", {
+      const res = await fetch("http://localhost:3002/order/sellOrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,31 +26,43 @@ const BuyActionWindow = ({ uid }) => {
           name: uid,
           qty: Number(stockQuantity),
           price: Number(stockPrice),
-          mode: "BUY",
+          mode: "SELL",
         }),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
-        toast.error(data.message || "Order failed");
+        toast.error(data.message || "Sell failed");
+
+        setTimeout(() => {
+          generalContext.closeSellWindow();
+        }, 1000);
+
         return;
       }
-      console.log(data);
-      toast.success("Stock bought successfully");
+
+      toast.success("Stock sold successfully");
+
       setTimeout(() => {
-        generalContext.closeBuyWindow();
+        generalContext.closeSellWindow();
         navigate("/holdings");
-      }, 800);
+      }, 1000);
     } catch (err) {
-      console.log("Failed to create new order", err);
+      toast.error("Server error");
+
+      setTimeout(() => {
+        generalContext.closeSellWindow();
+      }, 1000);
     }
   };
 
   const handleCancelClick = () => {
-    generalContext.closeBuyWindow(); //Close the window if user click the cancel button;
+    generalContext.closeSellWindow();
   };
 
   return (
-    <div className="container" id="buy-window" draggable="true">
+    <div className="container" id="sell-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
           <fieldset>
@@ -56,38 +70,39 @@ const BuyActionWindow = ({ uid }) => {
             <input
               type="number"
               name="qty"
-              id="qty"
-              onChange={(e) => setStockQuantity(e.target.value)}
               value={stockQuantity}
+              onChange={(e) => setStockQuantity(e.target.value)}
             />
           </fieldset>
+
           <fieldset>
             <legend>Price</legend>
             <input
               type="number"
               name="price"
-              id="price"
               step="0.05"
-              onChange={(e) => setStockPrice(e.target.value)}
               value={stockPrice}
+              onChange={(e) => setStockPrice(e.target.value)}
             />
           </fieldset>
         </div>
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>Stock will be sold instantly</span>
+
         <div>
-          <button className="btn btn-blue" onClick={handleBuyClick}>
-            Buy
-          </button>
-          <button className="btn btn-grey" onClick={handleCancelClick}>
+          <Link className="btn btn-red" onClick={handleSellClick}>
+            Sell
+          </Link>
+
+          <Link className="btn btn-grey" onClick={handleCancelClick}>
             Cancel
-          </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default BuyActionWindow;
+export default SellActionWindow;

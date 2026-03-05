@@ -80,4 +80,44 @@ router.post("/newOrder", async (req, res) => {
   }
 });
 
+//!===========SELL ORDER==========
+router.post("/sellOrder", async (req, res) => {
+  try {
+    const { name, qty, price } = req.body;
+    const holding = await Holdings.findOne({ name });
+    if (!holding) {
+      return res.status(400).json({ message: "You don't own this stock" });
+    }
+
+    if (holding.qty < qty) {
+      return res.status(400).json({
+        message: "Not enough stock to sell",
+      });
+    }
+
+    // Create new order for sell;
+    const newOrder = new Order({
+      name,
+      qty,
+      price,
+      mode: "SELL",
+    });
+    await newOrder.save();
+
+    // update holdings
+    holding.qty = holding.qty - qty;
+
+    if (holding.qty === 0) {
+      await Holdings.deleteOne({ name });
+    } else {
+      await holding.save();
+    }
+
+    res.json({
+      message: "Stock sold successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ message: "SErver error" });
+  }
+});
 export default router;
