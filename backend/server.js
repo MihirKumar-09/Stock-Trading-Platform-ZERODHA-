@@ -14,8 +14,13 @@ const app = express();
 const PORT = 3002;
 const uri = process.env.MONGODB_URI;
 
-app.use(bodyParser.json());
-app.use(cors());
+app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 //!======SESSION SET-UP=========
 const sessionOptions = {
@@ -43,12 +48,23 @@ import HoldingRoute from "./routes/holdingRoute.js";
 import PositionRoute from "./routes/positionRoute.js";
 import OrderRoute from "./routes/orderRoute.js";
 import WatchList from "./routes/watchListRoute.js";
+import UserRoute from "./routes/userRoute.js";
 
+// //!======CREATE FAKE USER=========
+// app.get("/demoUser", async (req, res) => {
+//   let fakeUser = new User({
+//     email: "hello@gmail.com",
+//     username: "hello",
+//   });
+//   const registeredUser = await User.register(fakeUser, "helloworld");
+//   res.send(registeredUser);
+// });
 //!===========REGISTER WITH SERVER=========
 app.use("/holdings", HoldingRoute);
 app.use("/position", PositionRoute);
 app.use("/order", OrderRoute);
 app.use("/watchList", WatchList);
+app.use("/user", UserRoute);
 
 //!============START SERVER & CALL THE FUNCTION===========
 app.listen(PORT, () => {
