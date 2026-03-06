@@ -11,6 +11,9 @@ import Navbar from "./landing_page/Navbar";
 import Footer from "./landing_page/Footer";
 import NotFound from "./landing_page/NoFound";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Navbar />
@@ -24,5 +27,18 @@ createRoot(document.getElementById("root")).render(
       <Route path="*" element={<NotFound />} />
     </Routes>
     <Footer />
+
+    <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+    />
   </BrowserRouter>,
 );
