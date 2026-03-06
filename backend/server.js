@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import bodyParser from "body-parser";
+import passport from "passport";
+import LocalStrategy from "passport-local";
+import User from "./models/User.js";
+import session from "express-session";
 
 const app = express();
 
@@ -12,6 +16,27 @@ const uri = process.env.MONGODB_URI;
 
 app.use(bodyParser.json());
 app.use(cors());
+
+//!======SESSION SET-UP=========
+const sessionOptions = {
+  secret: "superSecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
+app.use(session(sessionOptions));
+
+//!======PASSPORT CONFIGURE========
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //!=======IMPORT ALL ROUTES=========
 import HoldingRoute from "./routes/holdingRoute.js";
