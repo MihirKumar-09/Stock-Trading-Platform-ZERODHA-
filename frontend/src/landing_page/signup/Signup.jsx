@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -45,6 +46,7 @@ export default function Signup() {
         { withCredentials: true },
       );
 
+      window.location.href = "http://localhost:3000"; //! Navigate to Dashboard home page
       toast.success("Account created successfully");
       setFormData({
         username: "",
@@ -149,6 +151,9 @@ export default function Signup() {
             <button type="submit" className="btn btn-primary w-100">
               Create Account
             </button>
+            <Link to="/login" className="text-decoration-none">
+              <p className="text-center mt-3">Login</p>
+            </Link>
           </form>
         </div>
       </div>

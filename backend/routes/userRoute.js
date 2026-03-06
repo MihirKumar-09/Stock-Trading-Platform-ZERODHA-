@@ -1,6 +1,26 @@
 import express from "express";
 import User from "../models/User.js";
+import passport from "passport";
 const router = express.Router();
+
+//!=======GET SPECIFIC-USER===========
+// router.get("/me", async (req, res) => {
+//   try {
+//     if (!req.user) {
+//       return res.status(401).json({ message: "Not authenticated" });
+//     }
+//     console.log(req.user.username);
+//     return res.json({
+//       id: req.user._id,
+//       username: req.user.username,
+//       email: req.user.email,
+//     });
+//   } catch (err) {
+//     return res
+//       .status(500)
+//       .json({ message: "Internal server error", error: err.message });
+//   }
+// });
 
 //!=======SIGN-UP USER=========
 router.post("/newUser", async (req, res) => {
@@ -30,5 +50,21 @@ router.post("/newUser", async (req, res) => {
     });
   }
 });
+
+//!=========LOGIN USER=========
+// passport.authenticate() is a middleware for user authentication;
+router.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  async (req, res) => {
+    try {
+      return res.status(202).json({ message: "Welcome to Zerodha!" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: err.message });
+    }
+  },
+);
 
 export default router;
