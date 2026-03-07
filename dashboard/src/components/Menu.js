@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -12,6 +12,24 @@ const Menu = () => {
 
   const handleProfileClick = (index) => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  // handle logout;
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:3002/user/logout", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        window.location.href = "http://localhost:5173/login";
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const menuClass = "menu";
@@ -97,7 +115,7 @@ const Menu = () => {
         {isProfileDropdownOpen && (
           <div className="profile-dropdown">
             <p>Profile</p>
-            <p>Logout</p>
+            <p onClick={handleLogout}>Logout</p>
           </div>
         )}
       </div>

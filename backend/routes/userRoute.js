@@ -65,4 +65,18 @@ router.post(
   },
 );
 
+//!======LOG-OUT USER=========
+router.get("/logout", async (req, res) => {
+  try {
+    req.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(202).json({ message: "Logout successful" });
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;
