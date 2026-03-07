@@ -25,7 +25,7 @@ export default function Signup() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default page refresh
 
     const newErrors = {};
 

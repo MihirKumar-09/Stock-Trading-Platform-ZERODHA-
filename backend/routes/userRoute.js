@@ -4,38 +4,36 @@ import passport from "passport";
 const router = express.Router();
 
 //!=======GET SPECIFIC-USER===========
-// router.get("/me", async (req, res) => {
-//   try {
-//     if (!req.user) {
-//       return res.status(401).json({ message: "Not authenticated" });
-//     }
-//     console.log(req.user.username);
-//     return res.json({
-//       id: req.user._id,
-//       username: req.user.username,
-//       email: req.user.email,
-//     });
-//   } catch (err) {
-//     return res
-//       .status(500)
-//       .json({ message: "Internal server error", error: err.message });
-//   }
-// });
+router.get("/profile", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  res.json(req.user);
+});
 
 //!=======SIGN-UP USER=========
 router.post("/newUser", async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(req.body);
   try {
     const newUser = new User({ email, username });
     const registeredUser = await User.register(newUser, password);
-    res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        id: registeredUser._id,
-        username: registeredUser.username,
-        email: registeredUser.email,
-      },
+
+    // Create session after successfully sign up
+    req.login(registeredUser, (err) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Login after sign up failed",
+        });
+      }
+
+      return res.status(201).json({
+        message: "Signup successfully",
+        user: {
+          id: registeredUser._id,
+          username: registeredUser.username,
+          email: registeredUser.email,
+        },
+      });
     });
   } catch (err) {
     if (err.name === "UserExistsError") {
