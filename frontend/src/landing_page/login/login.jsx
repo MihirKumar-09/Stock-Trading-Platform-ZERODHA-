@@ -29,7 +29,7 @@ export default function Login() {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default page refresh
 
     const newErrors = {
       username: "",

@@ -1,25 +1,29 @@
-// import axios from "axios";
-// import { useEffect, useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 const Summary = () => {
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchMe = async () => {
-  //     try {
-  //       const res = await axios.get("http://localhost:3002/user/me", {
-  //         withCredentials: true,
-  //       });
-  //       setUser(res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchMe();
-  // }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("http://localhost:3002/user/profile", {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const data = await res.json();
+        setUser(data);
+      } catch (err) {
+        console.error("Error : ", err);
+      }
+    };
+    fetchUser();
+  }, []);
   return (
     <>
       <div className="username">
-        <h6>Hi, User</h6>
+        <h6>Hi, {user?.username.toUpperCase() || "User"}</h6>
         <hr className="divider" />
       </div>
 

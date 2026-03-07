@@ -26,7 +26,7 @@ app.use(
 const sessionOptions = {
   secret: "superSecret",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -50,15 +50,6 @@ import OrderRoute from "./routes/orderRoute.js";
 import WatchList from "./routes/watchListRoute.js";
 import UserRoute from "./routes/userRoute.js";
 
-// //!======CREATE FAKE USER=========
-// app.get("/demoUser", async (req, res) => {
-//   let fakeUser = new User({
-//     email: "hello@gmail.com",
-//     username: "hello",
-//   });
-//   const registeredUser = await User.register(fakeUser, "helloworld");
-//   res.send(registeredUser);
-// });
 //!===========REGISTER WITH SERVER=========
 app.use("/holdings", HoldingRoute);
 app.use("/position", PositionRoute);
